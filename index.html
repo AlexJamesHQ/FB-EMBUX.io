@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EMBUX - Alex Digital Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --ios-bg: #F5F5F7;
+            --ios-card: rgba(255, 255, 255, 0.8);
+            --ios-text: #1D1D1F;
+            --ios-primary: #007AFF;
+            --ios-secondary: #5856D6;
+            --ios-blur: blur(20px);
+            --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            --ios-bg: #000000;
+            --ios-card: rgba(28, 28, 30, 0.8);
+            --ios-text: #F5F5F7;
+            --ios-primary: #0A84FF;
+            --ios-secondary: #5E5CE6;
+        }
+
+        /* স্ক্রল ফিক্স: মেনুতে ক্লিক করলে সেকশন যাতে টপ বারের নিচে না চলে যায় */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px; 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--ios-bg);
+            color: var(--ios-text);
+            transition: var(--transition);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* Top Control Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background: var(--ios-card);
+            backdrop-filter: var(--ios-blur);
+            -webkit-backdrop-filter: var(--ios-blur);
+            z-index: 3000;
+            border-bottom: 0.5px solid rgba(0,0,0,0.1);
+        }
+
+        .dark-mode .top-nav {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* --- UPDATED LOGO WRAPPER WITH GIF (exactly like index) --- */
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-gif {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px; 
+            object-fit: cover;
+            display: block;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: linear-gradient(
+                90deg, 
+                #8F4A6A, 
+                #F27DBB, 
+                #F6B6D8, 
+                #7A4FA3, 
+                #1E1C2A,
+                #8F4A6A 
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shine 4s linear infinite;
+            position: relative;
+        }
+
+        .logo::after {
+            content: 'EMBUX';
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            background: inherit;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: blur(15px);
+            opacity: 0.4;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: -200% center;
+            }
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .theme-switch {
+            width: 50px;
+            height: 28px;
+            background: #E5E5EA;
+            border-radius: 50px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .dark-mode .theme-switch { background: #3A3A3C; }
+        
+        .theme-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 24px; height: 24px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: var(--transition);
+        }
+        .dark-mode .theme-switch::after { transform: translateX(22px); background: var(--ios-primary); }
+
+        .menu-trigger {
+            width: 20px;
+            height: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .menu-trigger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: var(--ios-text);
+            border-radius: 2px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .active .menu-trigger span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+        .active .menu-trigger span:nth-child(2) { opacity: 0; }
+        .active .menu-trigger span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--ios-card);
+            backdrop-filter: var(--ios-blur);
+            -webkit-backdrop-filter: var(--ios-blur);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            transform: scale(1.1);
+        }
+
+        .menu-overlay.active { opacity: 1; visibility: visible; transform: scale(1); }
+
+        .menu-links { list-style: none; text-align: center; }
+        .menu-links li { margin: 15px 0; transform: translateY(30px); opacity: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .menu-overlay.active .menu-links li { transform: translateY(0); opacity: 1; }
+        .menu-links a { text-decoration: none; color: var(--ios-text); font-size: 28px; font-weight: 700; transition: 0.2s; }
+
+        .hero { padding: 120px 20px 40px; text-align: center; }
+        .hero h1 { font-size: clamp(32px, 8vw, 42px); font-weight: 700; letter-spacing: -1px; margin-bottom: 15px; }
+        .hero p { color: #8E8E93; font-size: 18px; max-width: 340px; margin: 0 auto 30px; }
+
+        .status-pill { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: #8E8E93; margin-bottom: 10px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #34C759; box-shadow: 0 0 10px #34C759; animation: pulse 1.5s infinite; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 40px; }
+        .stat-card { background: var(--ios-card); padding: 15px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .stat-card h3 { font-size: 20px; color: var(--ios-primary); }
+        .stat-card p { font-size: 10px; text-transform: uppercase; color: #8E8E93; }
+
+        .section-title { padding: 0 20px; font-size: 24px; margin-bottom: 10px; border-left: 4px solid var(--ios-primary); margin-left: 20px; }
+        .section-desc { padding: 0 20px; font-size: 14px; color: #8E8E93; margin-bottom: 20px; }
+        
+        .cards-container { padding: 0 20px 40px; }
+        .ios-card { background: var(--ios-card); border-radius: 25px; padding: 25px; margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border: 0.5px solid rgba(255,255,255,0.2); transition: var(--transition); }
+        
+        .badge { display: inline-block; padding: 5px 12px; border-radius: 10px; font-size: 12px; font-weight: 600; margin-bottom: 15px; }
+        .badge-success { background: rgba(52, 199, 89, 0.1); color: #34C759; }
+        .badge-danger { background: rgba(255, 59, 48, 0.1); color: #FF3B30; }
+
+        .price { font-size: 32px; font-weight: 700; margin: 10px 0; }
+        .price span { font-size: 16px; color: #8E8E93; }
+
+        .ios-btn { width: 100%; padding: 16px; border-radius: 15px; border: none; background: var(--ios-primary); color: white; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 20px; transition: var(--transition); text-decoration: none; display: inline-block; text-align: center; }
+        .ios-btn:active { transform: scale(0.95); opacity: 0.8; }
+
+        .feature-list { list-style: none; margin-top: 15px; }
+        .feature-list li { font-size: 14px; margin: 8px 0; display: flex; align-items: center; gap: 10px; color: var(--ios-text); opacity: 0.8; }
+        .feature-list i { color: #34C759; }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        footer { padding: 40px 20px; text-align: center; background: var(--ios-card); border-radius: 30px 30px 0 0; }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav" id="mainNav">
+        <!-- UPDATED: logo-wrapper with GIF added here exactly like index -->
+        <div class="logo-wrapper">
+            <img class="logo-gif" src="https://i.postimg.cc/J40Wv4sH/d0d8956376095f5bc8b45ce380b8a2ea.gif" alt="EMBUX GIF">
+            <div class="logo">
+                <span>EMBUX</span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="theme-switch" id="modeToggle"></div>
+            
+            <button class="icon-btn" id="menuBtn" style="background:none; border:none;">
+                <div class="menu-trigger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+        </div>
+    </nav>
+
+    <div class="menu-overlay" id="menuOverlay">
+        <ul class="menu-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#products">Account Types</a></li>
+            <li><a href="#quick-links">Check UID Status</a></li>
+            <li><a href="#submit">Hotmail</a></li>
+            <li><a href="#contact">Support</a></li>
+        </ul>
+    </div>
+
+    <section class="hero" id="home">
+        <div class="status-pill">
+            <div class="dot"></div>
+            Work in progress
+        </div>
+        <h1 class="reveal">Sell Your Accounts Securely</h1>
+        <p class="reveal">EMBUX provides a trusted platform to sell your Facebook accounts with full security and fair pricing. Get paid quickly for your verified accounts.</p>
+        
+        <div class="stats-grid reveal">
+            <div class="stat-card">
+                <h3>2.8K</h3>
+                <p>Sold</p>
+            </div>
+            <div class="stat-card">
+                <h3>48h</h3>
+                <p>Payment</p>
+            </div>
+            <div class="stat-card">
+                <h3>100%</h3>
+                <p>Secure</p>
+            </div>
+        </div>
+    </section>
+
+    <h2 class="section-title reveal" id="products">Account Types</h2>
+    <div class="cards-container">
+        
+        <div class="ios-card reveal">
+            <span class="badge badge-danger">Closed</span>
+            <h3>Web Mail 0 Friend</h3>
+            <div class="price">7.30 <span>BDT</span></div>
+            <ul class="feature-list">
+                <li><i class="fas fa-circle-check"></i> 2FA Enabled</li>
+                <li><i class="fas fa-circle-check"></i> Web Mail Access</li>
+                <li><i class="fas fa-circle-check"></i> 48h Reporting</li>
+            </ul>
+            <button class="ios-btn" onclick="window.open('https://forms.gle/fKeGvCPx7bLc5FZv8')">Submit Now</button>
+        </div>
+
+        <div class="ios-card reveal">
+            <span class="badge badge-danger">Closed</span>
+            <h3>Web Mail 30 Friends</h3>
+            <div class="price">11.00 <span>BDT</span></div>
+            <ul class="feature-list">
+                <li><i class="fas fa-circle-check"></i> 2FA Enabled</li>
+                <li><i class="fas fa-circle-check"></i> 30+ Friends</li>
+                <li><i class="fas fa-circle-check"></i> Full Access</li>
+            </ul>
+            <button class="ios-btn" onclick="window.open('https://forms.gle/gGcC4nh2866BoRuG8')">Submit Now</button>
+        </div>
+
+        <div class="ios-card reveal">
+            <span class="badge badge-success">Open</span>
+            <h3>Hot Mail 30 Friends</h3>
+            <div class="price">12.00 <span>BDT</span></div>
+            <ul class="feature-list">
+                <li><i class="fas fa-circle-check"></i> 2FA + Hotmail</li>
+                <li><i class="fas fa-circle-check"></i> Minimum 30 Friends</li>
+                <li><i class="fas fa-circle-check"></i> Trusted Account</li>
+            </ul>
+            <button class="ios-btn" onclick="window.open('https://forms.gle/wGZrW18HHGiDah7o6')">Submit Now</button>
+        </div>
+    </div>
+
+    <h2 class="section-title reveal" id="quick-links">Account Verification Tools</h2>
+    <p class="section-desc reveal">Use our verification tools to check the status of your Facebook accounts before submission.</p>
+    
+    <div class="cards-container">
+        <div class="ios-card reveal">
+            <div style="font-size: 40px; color: var(--ios-primary); margin-bottom: 15px;">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+            <h3>Check UID Status</h3>
+            <p style="color: #8E8E93; font-size: 14px; margin-top: 10px;">Verify the status and validity of Facebook UIDs using our live checking tool.</p>
+            <a href="https://hitools.pro/check-live-uid" target="_blank" class="ios-btn">
+                <i class="fas fa-hand-point-right"></i> Check UID Now
+            </a>
+        </div>
+    </div>
+
+    <h2 class="section-title reveal" id="submit">Hotmail</h2>
+    <div class="cards-container">
+        <div class="ios-card reveal" style="background: linear-gradient(135deg, #007AFF, #5856D6); color: white;">
+            <h3>Create Account</h3>
+            <p style="opacity: 0.9; font-size: 14px; margin-top: 10px;">Get premium Hotmail accounts with full access for your Facebook profiles.</p>
+            <button class="ios-btn" style="background: white; color: #007AFF;" onclick="window.open('https://hotmail143.com/register.php?ref=REF0304E9')">Register Now</button>
+        </div>
+        
+         <h2 class="section-title reveal" id="submit">Support</h2>
+
+        <div class="ios-card reveal" id="contact">
+            <h3>Support Center</h3>
+            <p style="color: #8E8E93; font-size: 14px; margin-top: 5px;">Contact our support team directly on Telegram.</p>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="ios-btn" style="margin-top: 0;" onclick="window.open('https://t.me/Alex_EMBUX7920')">Support</button>
+            </div>
+        </div>
+        
+        <div class="ios-card reveal">
+            <h3>Official Channel</h3>
+            <p style="color: #8E8E93; font-size: 14px; margin-top: 5px;">Join our main Telegram channel for the latest updates and announcements.</p>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="ios-btn" style="margin-top: 0;" onclick="window.open('https://t.me/EMBUX8504')">Backup Channel</button>
+                <button class="ios-btn" style="margin-top: 0; background: #5856D6;" onclick="window.open('https://t.me/AlexDigitalShopBD')">Official Channel</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="reveal">
+        <!-- footer also shows logo but keep simple, but we can reuse wrapper? optional -->
+        <div class="logo-wrapper" style="margin: 0 auto 15px; width: fit-content;">
+            <img class="logo-gif" src="https://i.postimg.cc/J40Wv4sH/d0d8956376095f5bc8b45ce380b8a2ea.gif" alt="EMBUX GIF" style="width:30px; height:30px;">
+            <div class="logo" style="font-size:20px;">EMBUX</div>
+        </div>
+        <p style="font-size: 12px; color: #8E8E93;">&copy; 2024-2026 EMBUX - Premium Marketplace<br>Powered by Alex James</p>
+    </footer>
+
+    <script>
+        // Dark Mode Logic
+        const toggleBtn = document.getElementById('modeToggle');
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('alexEmbuxTheme', document.body.classList.contains('dark-mode'));
+        });
+
+        if(localStorage.getItem('alexEmbuxTheme') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // Menu Logic
+        const menuBtn = document.getElementById('menuBtn');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const mainNav = document.getElementById('mainNav');
+        const menuLinks = document.querySelectorAll('.menu-links a');
+
+        function toggleMenu() {
+            mainNav.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            document.body.style.overflow = menuOverlay.classList.contains('active') ? 'hidden' : 'auto';
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        menuLinks.forEach(link => link.addEventListener('click', () => {
+            if(menuOverlay.classList.contains('active')) toggleMenu();
+        }));
+
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Smooth Scroll Logic
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    const offsetPosition = targetElement.offsetTop - 80; // Header height offset
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
